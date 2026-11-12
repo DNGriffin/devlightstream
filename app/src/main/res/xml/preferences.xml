@@ -241,7 +241,7 @@
     <PreferenceCategory
         android:key="category_gamepad_settings"
         android:title="@string/category_gamepad_settings"
-        app:initialExpandedChildrenCount="1"
+        app:initialExpandedChildrenCount="3"
         app:iconSpaceReserved="false">
         <com.limelight.preferences.SeekBarPreference
             android:defaultValue="5"
@@ -252,6 +252,28 @@
             android:title="@string/title_seekbar_deadzone"
             app:iconSpaceReserved="false"
             seekbar:min="-20" />
+        <com.limelight.preferences.SeekBarPreference
+            android:defaultValue="100"
+            android:key="seekbar_left_stick_scale"
+            android:max="100"
+            android:dialogMessage="@string/summary_stick_scale"
+            android:summary="@string/summary_stick_scale"
+            android:text="@string/suffix_stick_scale"
+            android:title="@string/title_left_stick_scale"
+            app:iconSpaceReserved="false"
+            seekbar:min="0"
+            seekbar:step="1" />
+        <com.limelight.preferences.SeekBarPreference
+            android:defaultValue="100"
+            android:key="seekbar_right_stick_scale"
+            android:max="100"
+            android:dialogMessage="@string/summary_stick_scale"
+            android:summary="@string/summary_stick_scale"
+            android:text="@string/suffix_stick_scale"
+            android:title="@string/title_right_stick_scale"
+            app:iconSpaceReserved="false"
+            seekbar:min="0"
+            seekbar:step="1" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="checkbox_multi_controller"
@@ -1016,7 +1038,7 @@
             app:iconSpaceReserved="false" />
 
         <com.limelight.preferences.WebLauncherPreference
-            url="https://github.com/ClassicOldSong/moonlight-android/releases"
+            url="https://github.com/DNGriffin/devlightstream/releases"
             android:key="option_software_release"
             android:summary="@string/summary_software_update"
             android:title="@string/title_software_update"

@@ -1212,6 +1212,10 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
         }
     }
 
+    private static short scaleStickAxis(short axis, int percentage) {
+        return (short) (axis * percentage / 100);
+    }
+
     private void sendControllerInputPacket(GenericControllerContext originalContext) {
         assignControllerNumberIfNeeded(originalContext);
 
@@ -1348,11 +1352,14 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
                     (short)0, (byte)0, (byte)0, (short)0, (short)0, (short)0, (short)0);
         }
         else {
+            // Scale the final gamepad axes once, after deadzone handling and input merging.
             conn.sendControllerInput(controllerNumber, getActiveControllerMask(),
                     inputMap,
                     leftTrigger, rightTrigger,
-                    leftStickX, leftStickY,
-                    rightStickX, rightStickY);
+                    scaleStickAxis(leftStickX, prefConfig.leftStickScalePercentage),
+                    scaleStickAxis(leftStickY, prefConfig.leftStickScalePercentage),
+                    scaleStickAxis(rightStickX, prefConfig.rightStickScalePercentage),
+                    scaleStickAxis(rightStickY, prefConfig.rightStickScalePercentage));
         }
     }
 

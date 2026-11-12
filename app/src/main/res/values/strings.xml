@@ -230,6 +230,10 @@
     <string name="title_seekbar_deadzone">Adjust analog stick deadzone</string>
     <string name="summary_seekbar_deadzone">Positive values set a normal dead zone, negative values apply dead zone compensation. Ensure your controller can adjust dead zones when using dead zone compensation, or centering may be difficult.</string>
     <string name="suffix_seekbar_deadzone">%</string>
+    <string name="title_left_stick_scale">Left stick scale</string>
+    <string name="title_right_stick_scale">Right stick scale</string>
+    <string name="summary_stick_scale" formatted="false">Sets how much stick movement is sent to the host. At 50%, full tilt sends half output. At 0%, the stick sends no movement.</string>
+    <string name="suffix_stick_scale">%</string>
     <string name="title_checkbox_xb1_driver">Xbox 360/One/NintendoPro USB gamepad driver</string>
     <string name="summary_checkbox_xb1_driver">Enables a built-in USB driver for devices without native Xbox/Nintendo Pro controller support</string>
     <string name="title_checkbox_usb_bind_all">Override native Xbox gamepad support</string>
@@ -471,9 +475,9 @@
     <string name="summary_share_performance_logs">Share your performance with friends or the community</string>
     <string name="title_share_performance_logs_button">Share Performance Logs</string>
     <string name="title_software_update">Software Update</string>
-    <string name="summary_software_update">Artemis Nior Version by ClassicOldSong - Visit GitHub Releases to get latest version</string>
+    <string name="summary_software_update">Visit GitHub Releases for devlightstream updates</string>
     <string name="title_follow_update">Follow Update</string>
-    <string name="summary_follow_update">Follow updates of Artemis with Obtainium</string>
+    <string name="summary_follow_update">Follow updates of devlightstream with Obtainium</string>
     <string name="title_special_key_layout">Special Key Layout</string>
     <string name="title_show_virtual_key">Display virtual keys on screen</string>
     <string name="summary_show_virtual_key">Display a layer of virtual special keys on the touchscreen.\nKey opacity is shared with the virtual gamepad above.</string>

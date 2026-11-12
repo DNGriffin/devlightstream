@@ -55,6 +55,8 @@ public class PreferenceConfiguration {
     private static final String DISABLE_TOASTS_PREF_STRING = "checkbox_disable_warnings";
     private static final String HOST_AUDIO_PREF_STRING = "checkbox_host_audio";
     private static final String DEADZONE_PREF_STRING = "seekbar_deadzone";
+    private static final String LEFT_STICK_SCALE_PREF_STRING = "seekbar_left_stick_scale";
+    private static final String RIGHT_STICK_SCALE_PREF_STRING = "seekbar_right_stick_scale";
     private static final String OSC_OPACITY_PREF_STRING = "seekbar_osc_opacity";
     private static final String LANGUAGE_PREF_STRING = "list_languages";
     private static final String SMALL_ICONS_PREF_STRING = "checkbox_small_icon_mode";
@@ -152,6 +154,7 @@ public class PreferenceConfiguration {
     private static final boolean DEFAULT_DISABLE_TOASTS = false;
     private static final boolean DEFAULT_HOST_AUDIO = false;
     private static final int DEFAULT_DEADZONE = 5;
+    private static final int DEFAULT_STICK_SCALE = 100;
     private static final int DEFAULT_OPACITY = 90;
     public static final String DEFAULT_LANGUAGE = "default";
     private static final boolean DEFAULT_MULTI_CONTROLLER = true;
@@ -240,6 +243,8 @@ public class PreferenceConfiguration {
     public FormatOption videoFormat;
     public int framePacingWarpFactor = 0;
     public int deadzonePercentage;
+    public int leftStickScalePercentage = DEFAULT_STICK_SCALE;
+    public int rightStickScalePercentage = DEFAULT_STICK_SCALE;
     public int oscOpacity;
     public int oscKeyboardOpacity;
     public int onscreenKeyboardHeight;
@@ -873,6 +878,10 @@ private static int getFramePacingValue(Context context) {
         config.analogStickForScrolling = getAnalogStickForScrollingValue(context);
 
         config.deadzonePercentage = prefs.getInt(DEADZONE_PREF_STRING, DEFAULT_DEADZONE);
+        config.leftStickScalePercentage = Math.max(0, Math.min(100,
+                prefs.getInt(LEFT_STICK_SCALE_PREF_STRING, DEFAULT_STICK_SCALE)));
+        config.rightStickScalePercentage = Math.max(0, Math.min(100,
+                prefs.getInt(RIGHT_STICK_SCALE_PREF_STRING, DEFAULT_STICK_SCALE)));
 
         config.oscOpacity = prefs.getInt(OSC_OPACITY_PREF_STRING, DEFAULT_OPACITY);
 
