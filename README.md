@@ -1,13 +1,31 @@
-# devlightstream
+# Devlightstream DC
 
 devlightstream is an Android game streaming client for [Apollo](https://github.com/ClassicOldSong/Apollo) and
 [Sunshine](https://github.com/LizardByte/Sunshine), based on [Artemis Android (formerly Moonlight Noir)](https://github.com/ClassicOldSong/moonlight-android).
 
-## Stick scaling
+## Devlightstream DC stick tuning
 
-In **Settings → Gamepad settings**, set **Left stick scale** and **Right stick scale** independently from 0% to 100%.
-Both default to 100%. At 50%, a stick tilted all the way sends half output to the host; at 0%, it always sends neutral.
-Scaling is linear on both axes and applies to physical and on-screen gamepad sticks. It takes effect when you start a stream.
+This experimental Android app has its own DC icon and application ID (`com.dngriffin.devlightstream.dc`). It installs alongside the original `devlightstream`, its debug build, and Artemis. Pair this app with your host separately; settings and pairing data are independent.
+
+In **Settings → Gamepad settings → DC stick tuning**, adjust each stick independently:
+
+- **Input dead zone:** 0–99%; input at or below this radius sends zero.
+- **Minimum output:** 0–100%; output starts at this radius immediately after the dead zone.
+- **Maximum output:** 0–100%; full tilt reaches this radius. Zero disables the stick. If minimum exceeds maximum, the effective minimum equals maximum.
+- **Response curve:** Linear, Quadratic, Cubic, Square root, or S-curve.
+
+Defaults are 5% input dead zone, 0% minimum, 100% maximum, and Linear. Reconnect the stream after changing settings. These settings transform gamepad packets from Android gamepads, USB gamepads, and on-screen sticks. The separate mouse-emulation mode retains its existing behavior.
+
+For a cursor in a game with a large built-in dead zone, try **5% dead zone, 20% minimum, 50% maximum**. With Linear, 5% input sends zero, just beyond 5% starts near 20%, 52.5% input sends 35%, and full tilt sends 50%. The entire remaining 95% of stick travel controls the 20–50% output band.
+
+Direction is preserved. The cap is radial, so diagonals cannot exceed the selected output radius. The client applies dead zone removal, curve, and range mapping once after merging controller input:
+
+```
+t = (min(inputRadius, 1) - deadzone) / (1 - deadzone)
+outputRadius = minimum + (maximum - minimum) * curve(t)
+```
+
+Linear uses `t`; Quadratic `t²`; Cubic `t³`; Square root `√t`; S-curve `t²(3−2t)`. Quadratic and Cubic emphasize precision near the minimum; Square root rises more quickly; S-curve eases both ends. All curves share the same endpoints and use 16-bit gamepad packets.
 
 ## Features inherited from Artemis
 
@@ -64,3 +82,7 @@ The build uses Android NDK 27.0.12077973 and writes the APKs to `app/build/outpu
 
 Moonlight is the work of students at [Case Western](http://case.edu) and was
 started as a project at [MHacks](http://mhacks.org).
+
+For a signed DC release, keep a dedicated signing keystore outside Git, with alias `dc`, and set `DC_KEYSTORE` and `DC_STORE_PASSWORD` before running `./gradlew :app:assembleNonRoot_gameRelease`. Preserve that key for future DC updates. Do not use the original app identity.
+
+Controller tests: `./gradlew :app:testNonRoot_gameDebugUnitTest --tests 'com.limelight.binding.input.*'`.

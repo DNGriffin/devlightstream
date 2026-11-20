@@ -243,6 +243,12 @@ public class PreferenceConfiguration {
     public FormatOption videoFormat;
     public int framePacingWarpFactor = 0;
     public int deadzonePercentage;
+    public int leftStickDeadzonePercentage = 5;
+    public int rightStickDeadzonePercentage = 5;
+    public int leftStickMinimumPercentage;
+    public int rightStickMinimumPercentage;
+    public String leftStickCurve = "linear";
+    public String rightStickCurve = "linear";
     public int leftStickScalePercentage = DEFAULT_STICK_SCALE;
     public int rightStickScalePercentage = DEFAULT_STICK_SCALE;
     public int oscOpacity;
@@ -882,6 +888,17 @@ private static int getFramePacingValue(Context context) {
                 prefs.getInt(LEFT_STICK_SCALE_PREF_STRING, DEFAULT_STICK_SCALE)));
         config.rightStickScalePercentage = Math.max(0, Math.min(100,
                 prefs.getInt(RIGHT_STICK_SCALE_PREF_STRING, DEFAULT_STICK_SCALE)));
+
+        config.leftStickDeadzonePercentage = Math.max(0, Math.min(99,
+                prefs.getInt("seekbar_left_stick_deadzone", 5)));
+        config.rightStickDeadzonePercentage = Math.max(0, Math.min(99,
+                prefs.getInt("seekbar_right_stick_deadzone", 5)));
+        config.leftStickMinimumPercentage = Math.max(0, Math.min(config.leftStickScalePercentage,
+                prefs.getInt("seekbar_left_stick_minimum", 0)));
+        config.rightStickMinimumPercentage = Math.max(0, Math.min(config.rightStickScalePercentage,
+                prefs.getInt("seekbar_right_stick_minimum", 0)));
+        config.leftStickCurve = prefs.getString("list_left_stick_curve", "linear");
+        config.rightStickCurve = prefs.getString("list_right_stick_curve", "linear");
 
         config.oscOpacity = prefs.getInt(OSC_OPACITY_PREF_STRING, DEFAULT_OPACITY);
 

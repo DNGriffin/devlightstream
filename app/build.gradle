@@ -11,8 +11,8 @@ android {
         minSdk 21
         targetSdk 34
 
-        versionName "20.2.6"
-        versionCode = 57
+        versionName "20.2.6-dc.1"
+        versionCode = 58
 
         // Generate native debug symbols to allow Google Play to symbolicate our native crashes
         ndk.debugSymbolLevel = 'FULL'
@@ -40,7 +40,7 @@ android {
                     "obtainium_app_url",
                     "data:text/html;base64,PGgxPlJvb3QgYnVpbGQgaXMgbm90IGF2YWlsYWJsZTwvaDE+"
 
-            applicationId "com.dngriffin.devlightstream.root"
+            applicationId "com.dngriffin.devlightstream.dc.root"
             dimension "root"
             buildConfigField "boolean", "ROOT_BUILD", "true"
         }
@@ -54,9 +54,9 @@ android {
 
             resValue "string",
                     "obtainium_app_url",
-                    "https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22com.dngriffin.devlightstream%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FDNGriffin%2Fdevlightstream%22%2C%22author%22%3A%22DNGriffin%22%2C%22name%22%3A%22devlightstream%22%2C%22additionalSettings%22%3A%22%7B%5C%22apkFilterRegEx%5C%22%3A%5C%22nonRoot%5C%22%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22v%28.%2B%29%5C%22%7D%22%7D"
+                    "https://github.com/DNGriffin/devlightstream/releases/tag/v20.2.6-dc.1"
 
-            applicationId "com.dngriffin.devlightstream"
+            applicationId "com.dngriffin.devlightstream.dc"
             dimension "root"
             buildConfigField "boolean", "ROOT_BUILD", "false"
         }
@@ -93,20 +93,30 @@ android {
         }
     }
 
+    signingConfigs {
+        dcRelease {
+            storeFile file(System.getenv('DC_KEYSTORE') ?: 'key/dc-release.jks')
+            storePassword System.getenv('DC_STORE_PASSWORD')
+            keyAlias 'dc'
+            keyPassword System.getenv('DC_STORE_PASSWORD')
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            resValue "string", "app_label", "devlightstream (Debug)"
-            resValue "string", "app_label_root", "devlightstream (Root Debug)"
-            resValue "string", "app_label_game", "devlightstream (Game Debug)"
+            resValue "string", "app_label", "Devlightstream DC (Debug)"
+            resValue "string", "app_label_root", "Devlightstream DC (Root Debug)"
+            resValue "string", "app_label_game", "Devlightstream DC (Game Debug)"
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            resValue "string", "app_label", "devlightstream"
-            resValue "string", "app_label_root", "devlightstream (Root)"
-            resValue "string", "app_label_game", "devlightstream (Game)"
+            signingConfig signingConfigs.dcRelease
+            resValue "string", "app_label", "Devlightstream DC"
+            resValue "string", "app_label_root", "Devlightstream DC (Root)"
+            resValue "string", "app_label_game", "Devlightstream DC (Game)"
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

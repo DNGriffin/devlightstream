@@ -131,6 +131,8 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
     private boolean stopped = false;
 
     private final PreferenceConfiguration prefConfig;
+    private final StickResponse leftResponse;
+    private final StickResponse rightResponse;
     private short currentControllers, initialControllers;
 
     public ControllerHandler(Activity activityContext, NvConnection conn, GameGestures gestures, PreferenceConfiguration prefConfig) {
@@ -138,6 +140,10 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
         this.conn = conn;
         this.gestures = gestures;
         this.prefConfig = prefConfig;
+        leftResponse = new StickResponse(prefConfig.leftStickDeadzonePercentage,
+                prefConfig.leftStickMinimumPercentage, prefConfig.leftStickScalePercentage, prefConfig.leftStickCurve);
+        rightResponse = new StickResponse(prefConfig.rightStickDeadzonePercentage,
+                prefConfig.rightStickMinimumPercentage, prefConfig.rightStickScalePercentage, prefConfig.rightStickCurve);
         this.deviceVibrator = (Vibrator) activityContext.getSystemService(Context.VIBRATOR_SERVICE);
         this.deviceSensorManager = (SensorManager) activityContext.getSystemService(Context.SENSOR_SERVICE);
         this.inputManager = (InputManager) activityContext.getSystemService(Context.INPUT_SERVICE);
@@ -1212,10 +1218,6 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
         }
     }
 
-    private static short scaleStickAxis(short axis, int percentage) {
-        return (short) (axis * percentage / 100);
-    }
-
     private void sendControllerInputPacket(GenericControllerContext originalContext) {
         assignControllerNumberIfNeeded(originalContext);
 
@@ -1352,14 +1354,16 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
                     (short)0, (byte)0, (byte)0, (short)0, (short)0, (short)0, (short)0);
         }
         else {
-            // Scale the final gamepad axes once, after deadzone handling and input merging.
+            // Transform raw, merged gamepad input exactly once; never mutate cached input.
+            int left = leftResponse.apply(leftStickX, leftStickY);
+            int right = rightResponse.apply(rightStickX, rightStickY);
             conn.sendControllerInput(controllerNumber, getActiveControllerMask(),
                     inputMap,
                     leftTrigger, rightTrigger,
-                    scaleStickAxis(leftStickX, prefConfig.leftStickScalePercentage),
-                    scaleStickAxis(leftStickY, prefConfig.leftStickScalePercentage),
-                    scaleStickAxis(rightStickX, prefConfig.rightStickScalePercentage),
-                    scaleStickAxis(rightStickY, prefConfig.rightStickScalePercentage));
+                    StickResponse.x(left),
+                    StickResponse.y(left),
+                    StickResponse.x(right),
+                    StickResponse.y(right));
         }
     }
 
@@ -1710,7 +1714,9 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
         if (context.leftStickXAxis != -1 && context.leftStickYAxis != -1) {
             Vector2d leftStickVector = populateCachedVector(lsX, lsY);
 
-            handleDeadZone(leftStickVector, context.leftStickDeadzoneRadius);
+            if (context.mouseEmulationActive) {
+                handleDeadZone(leftStickVector, context.leftStickDeadzoneRadius);
+            }
 
             context.leftStickX = (short) (leftStickVector.getX() * 0x7FFE);
             context.leftStickY = (short) (-leftStickVector.getY() * 0x7FFE);
@@ -1719,7 +1725,9 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
         if (context.rightStickXAxis != -1 && context.rightStickYAxis != -1) {
             Vector2d rightStickVector = populateCachedVector(rsX, rsY);
 
-            handleDeadZone(rightStickVector, context.rightStickDeadzoneRadius);
+            if (context.mouseEmulationActive) {
+                handleDeadZone(rightStickVector, context.rightStickDeadzoneRadius);
+            }
 
             context.rightStickX = (short) (rightStickVector.getX() * 0x7FFE);
             context.rightStickY = (short) (-rightStickVector.getY() * 0x7FFE);
@@ -2977,14 +2985,18 @@ public class ControllerHandler implements InputManager.InputDeviceListener, UsbD
 
         Vector2d leftStickVector = populateCachedVector(leftStickX, leftStickY);
 
-        handleDeadZone(leftStickVector, context.leftStickDeadzoneRadius);
+        if (context.mouseEmulationActive) {
+            handleDeadZone(leftStickVector, context.leftStickDeadzoneRadius);
+        }
 
         context.leftStickX = (short) (leftStickVector.getX() * 0x7FFE);
         context.leftStickY = (short) (-leftStickVector.getY() * 0x7FFE);
 
         Vector2d rightStickVector = populateCachedVector(rightStickX, rightStickY);
 
-        handleDeadZone(rightStickVector, context.rightStickDeadzoneRadius);
+        if (context.mouseEmulationActive) {
+            handleDeadZone(rightStickVector, context.rightStickDeadzoneRadius);
+        }
 
         context.rightStickX = (short) (rightStickVector.getX() * 0x7FFE);
         context.rightStickY = (short) (-rightStickVector.getY() * 0x7FFE);

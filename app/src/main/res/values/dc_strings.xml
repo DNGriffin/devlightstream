@@ -1,0 +1,8 @@
+<resources>
+<string name="dc_stick_help" formatted="false">Use all travel above the dead zone to control your output range. Example: 5% dead zone → 20–50% output. Reconnect the stream after changes.</string>
+<string name="dc_deadzone_help" formatted="false">Sends zero through this input radius. Remaining travel is remapped across the entire output range. 0% disables the client dead zone.</string>
+<string name="dc_minimum_help" formatted="false">Output jumps to this radius just beyond the dead zone, then rises toward maximum. Use this to overcome a dead zone built into a game. If minimum exceeds maximum, maximum is used.</string>
+<string name="dc_maximum_help" formatted="false">Output radius at full tilt. 50% caps output at half strength, including diagonals. 0% disables this stick. Minimum is capped at this value.</string>
+<string-array name="dc_curve_names"><item>Linear — even response</item><item>Quadratic — finer low-speed control</item><item>Cubic — strongest low-speed precision</item><item>Square root — faster early response</item><item>S-curve — gentle at both ends</item></string-array>
+<string-array name="dc_curve_values"><item>linear</item><item>quadratic</item><item>cubic</item><item>sqrt</item><item>smoothstep</item></string-array>
+</resources>
